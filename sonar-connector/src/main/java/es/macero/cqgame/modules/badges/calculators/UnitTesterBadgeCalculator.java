@@ -19,7 +19,7 @@ public class UnitTesterBadgeCalculator implements BadgeCalculator {
 
     @Override
     public Optional<SonarBadge> badgeFromIssueList(List<Issue> issues) {
-        long count = issues.stream().filter(i -> i.getRule().equalsIgnoreCase(RULE_ID_LINE) || i.getRule().equalsIgnoreCase(RULE_ID_BRANCH)).count();
+        long count = countFilteredIssues(issues, i -> i.getRule().equalsIgnoreCase(RULE_ID_LINE) || i.getRule().equalsIgnoreCase(RULE_ID_BRANCH));
         if (count >= 50) {
             return Optional.of(new SonarBadge("Golden Cover", "Fixing UT coverage for 50 legacy classes.", EXTRA_POINTS_GOLDEN));
         } else if (count >= 25) {
