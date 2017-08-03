@@ -6,6 +6,8 @@ import es.macero.cqgame.modules.sonarapi.resultbeans.Issues;
 import es.macero.cqgame.modules.sonarapi.resultbeans.Paging;
 import es.macero.cqgame.modules.stats.service.SonarStatsService;
 import es.macero.cqgame.util.ApiHttpUtils;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ final class SonarDataRetriever {
 	public void retrieveData() {
 		// It seems that sonar doesn't allow parallel queries with same user since it creates a register for internal
 		// stats and that causes an error when inserting into the database.
-		statsService.getIds().stream().forEach(
+		statsService.getIds().forEach(
 				new RequestLauncher(statsService, configurationService.getConfiguration().getUrl(),
 						configurationService.getConfiguration().getUser(),
 						configurationService.getConfiguration().getPassword()));
@@ -93,7 +95,7 @@ final class SonarDataRetriever {
 		}
 
 		HttpHeaders getHeaders() {
-			if (sonarUser != null && !sonarUser.trim().isEmpty()) {
+			if (StringUtils.isNotBlank(sonarUser)) {
 				return ApiHttpUtils.getHeaders(sonarUser, sonarPassword);
 			} else {
 				return new HttpHeaders();
@@ -104,7 +106,7 @@ final class SonarDataRetriever {
 			URI uri = UriComponentsBuilder.fromHttpUrl(sonarUrl + GET_ISSUES_COMMAND)
 				.buildAndExpand(assignee.toLowerCase() + "," + assignee.toUpperCase(), "FIXED", pageIndex, 500)
 				.toUri();
-			System.out.println(uri);
+			log.debug("generated URI " + uri);
 			return uri;
 		}
 	}

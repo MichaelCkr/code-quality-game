@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,10 +50,13 @@ final class SonarStatsCalculatorServiceImpl implements SonarStatsCalculatorServi
 			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
 				.isBefore(coverageDate)).collect(Collectors.toList());
 
-		int debtSum = (int) issuesFilteredByLegacyDate.stream().map(Issue::getDebt)
-			.filter(c -> c != null).map(Utils::durationTranslator)
-			.map(Duration::parse).mapToLong(Duration::toMinutes)
-			.sum();
+		int debtSum = (int) issuesFilteredByLegacyDate.stream()
+		    .map(Issue::getDebt)
+		        .filter(Objects::nonNull)
+		        .map(Utils::durationTranslator)
+		        .map(Duration::parse)
+		        .mapToLong(Duration::toMinutes)
+		        .sum();
 
 		Map<String, Long> typeCount = issuesFilteredByLegacyDate.stream()
 			.collect(Collectors.groupingBy(Issue::getSeverity, Collectors.counting()));
