@@ -2,6 +2,6 @@
 <sonarUserList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="../users.xsd">
 	<user id="admin" alias="Admin" team="Team Admin" />
-	<user id="mecker" alias="Michael Ecker" team="Team Blau" />
+	<user id="mecker" alias="MichaeCkr" team="Team Blau" />
 	<user id="dhendrix" alias="David Hendrix" team="Team Blau" />
 </sonarUserList>

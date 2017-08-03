@@ -42,13 +42,14 @@ final class SonarStatsCalculatorServiceImpl implements SonarStatsCalculatorServi
 	public SonarStats fromIssueList(final List<Issue> issues) {
 		// For the stats we only use those issues created before 'legacy date'
 		issues.stream().map(i -> IssueDateFormatter.format(i.getCreationDate())).forEach(log::info);
-		List<Issue> issuesFilteredByLegacyDate = issues.stream()
-			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
-				.isBefore(legacyDate)).collect(Collectors.toList());
-		List<Issue> issuesFilteredByCovDate = issues.stream()
-			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
-				.isBefore(coverageDate)).collect(Collectors.toList());
-
+//		List<Issue> issuesFilteredByLegacyDate = issues.stream()
+//			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
+//				.isBefore(legacyDate)).collect(Collectors.toList());
+//		List<Issue> issuesFilteredByCovDate = issues.stream()
+//			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
+//				.isBefore(coverageDate)).collect(Collectors.toList());
+		List<Issue> issuesFilteredByLegacyDate = issues;
+		List<Issue> issuesFilteredByCovDate = issues;
 		int debtSum = (int) issuesFilteredByLegacyDate.stream().map(Issue::getDebt)
 			.filter(c -> c != null).map(Utils::durationTranslator)
 			.map(Duration::parse).mapToLong(Duration::toMinutes)
