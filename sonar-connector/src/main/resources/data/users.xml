@@ -4,4 +4,5 @@
 	<user id="admin" alias="Admin" team="Team Admin" />
 	<user id="mecker" alias="MichaeCkr" team="Team Blau" />
 	<user id="dhendrix" alias="David Hendrix" team="Team Blau" />
+	<user id="sdemary" alias="Nafetsky" team="Team Blau" />
 </sonarUserList>
