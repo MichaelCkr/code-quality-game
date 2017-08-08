@@ -2,10 +2,16 @@ package es.macero.cqgame.modules.badges.calculators;
 
 import es.macero.cqgame.modules.badges.domain.SonarBadge;
 import es.macero.cqgame.modules.sonarapi.resultbeans.Issue;
+import es.macero.cqgame.util.IssueDateFormatter;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class UnitTesterBadgeCalculator implements BadgeCalculator {
@@ -17,9 +23,19 @@ public class UnitTesterBadgeCalculator implements BadgeCalculator {
     private static final String RULE_ID_LINE = "common-java:InsufficientLineCoverage";
     private static final String RULE_ID_BRANCH = "common-java:InsufficientBranchCoverage";
 
-    @Override
+	private LocalDate coverageDate;
+
+	@Autowired
+	public UnitTesterBadgeCalculator(@Value("${coverageDate}") final String coverageDateString) {
+		this.coverageDate = LocalDate.parse(coverageDateString);
+	}
+
+
+	@Override
     public Optional<SonarBadge> badgeFromIssueList(List<Issue> issues) {
-        long count = countFilteredIssues(issues, i -> i.getRule().equalsIgnoreCase(RULE_ID_LINE) || i.getRule().equalsIgnoreCase(RULE_ID_BRANCH));
+		List<Issue> filtered = issues.stream().filter(i -> IssueDateFormatter.format(i.getCreationDate())
+		                                              .isBefore(coverageDate)).collect(Collectors.toList());
+        long count = countFilteredIssues(filtered, i -> RULE_ID_LINE.equalsIgnoreCase(i.getRule()) || RULE_ID_BRANCH.equalsIgnoreCase(i.getRule()));
         if (count >= 50) {
             return Optional.of(new SonarBadge("Golden Cover", "Fixing UT coverage for 50 legacy classes.", EXTRA_POINTS_GOLDEN));
         } else if (count >= 25) {

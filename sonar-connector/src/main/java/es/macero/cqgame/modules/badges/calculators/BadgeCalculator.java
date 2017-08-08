@@ -12,6 +12,8 @@ public interface BadgeCalculator {
     Optional<SonarBadge> badgeFromIssueList(List<Issue> issues);
 
     default long countFilteredIssues(List<Issue> issues, Predicate<Issue> filter) {
-        return issues.stream().filter(filter).count();
+        return issues.stream()
+                     .filter(filter)
+                     .count();
     }
 }
