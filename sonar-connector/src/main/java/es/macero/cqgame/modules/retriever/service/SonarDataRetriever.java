@@ -8,6 +8,7 @@ import es.macero.cqgame.modules.stats.service.SonarStatsService;
 import es.macero.cqgame.util.ApiHttpUtils;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ import java.util.function.Consumer;
 final class SonarDataRetriever {
 
 	private static final Log log = LogFactory.getLog(SonarDataRetriever.class);
-	private static final String GET_ISSUES_COMMAND = "/api/issues/search?assignees={assignees}|resolutions={resolutions}|p={page}|ps={pageSize}";
+	private static final String GET_ISSUES_COMMAND = "/api/issues/search?assignees={assignees}&resolutions={resolutions}&p={page}&ps={pageSize}";
 
 	private final SonarStatsService statsService;
 	private final SonarServerConfigurationService configurationService;
@@ -73,7 +74,7 @@ final class SonarDataRetriever {
 		public void accept(final String id) {
 			try {
 				int pageIndex = 1;
-				int totalPages = 1;
+				Integer totalPages = 1;
 				List<Issue> issues = new ArrayList<>();
 				while (pageIndex <= totalPages) {
 					RestTemplate restTemplate = new RestTemplate();
@@ -82,7 +83,7 @@ final class SonarDataRetriever {
 					ResponseEntity<Issues> response = restTemplate.exchange(uri, HttpMethod.GET, request, Issues.class);
 					if (pageIndex == 1) {
 						Paging paging = response.getBody().getPaging();
-						totalPages = paging.getTotal();
+						totalPages = (Integer) paging.getAdditionalProperties().get("pages");
 					}
 					issues.addAll(response.getBody().getIssues());
 					pageIndex++;

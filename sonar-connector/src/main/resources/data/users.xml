@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sonarUserList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="../users.xsd">
-	<user id="lena" alias="Lena" team="Team Alpha" />
-	<user id="mechero" alias="Mechero" team="Team Omega" />
-	<user id="goya" alias="Paco Goya" team="Team Omega" />
-	<user id="picasso" alias="Pablo Picasso" team="Team Alpha" />
+	<user id="admin" alias="Admin" team="Team Admin" />
+	<user id="mecker" alias="MichaeCkr" team="Team Blau" />
+	<user id="dhendrix" alias="David Hendrix" team="Team Blau" />
+	<user id="sdemary" alias="Nafetsky" team="Team Blau" />
+	<user id="aschaer" alias="aschaer" team="Team Blau" />
+	<user id="eschrein" alias="eschreiner" team="Team Blau" />
+	<user id="lwygasch" alias="lwygasch" team="Team Blau" />
+	<user id="bern" alias="Bernhard" team="Team Grün" />
 </sonarUserList>
