@@ -16,6 +16,7 @@ public final class SonarStatsRowBuilder {
     private int major = 0;
     private int minor = 0;
     private int info = 0;
+    private String dept;
     private Collection<SonarBadge> badges = Collections.emptyList();
 
     public SonarStatsRowBuilder(String userAlias, String userTeam) {
@@ -58,12 +59,17 @@ public final class SonarStatsRowBuilder {
         return this;
     }
 
+    public SonarStatsRowBuilder withDept(String dept) {
+    	this.dept = dept;
+    	return this;
+    }
+
     public SonarStatsRowBuilder withBadges(Collection<SonarBadge> badges) {
         this.badges = badges;
         return this;
     }
 
     public SonarStatsRow createSonarStatsRow() {
-        return new SonarStatsRow(userAlias, userTeam, totalPoints, totalPaidDebt, blocker, critical, major, minor, info, badges);
+        return new SonarStatsRow(userAlias, userTeam, totalPoints, totalPaidDebt, blocker, critical, major, minor, info, dept, badges);
     }
 }

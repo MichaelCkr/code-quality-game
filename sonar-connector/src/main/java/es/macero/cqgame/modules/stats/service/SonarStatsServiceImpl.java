@@ -72,7 +72,7 @@ final class SonarStatsServiceImpl implements SonarStatsService {
             rows.add(new SonarStatsRow(user.getAlias(), user.getTeam(), stats.getTotalPoints(),
                     stats.getTotalPaidDebt(), stats.getBlocker(),
                     stats.getCritical(), stats.getMajor(), stats.getMinor(),
-                    stats.getInfo(), stats.getBadges()));
+                    stats.getInfo(), stats.getDept(), stats.getBadges()));
         }
         return rows.stream().sorted((r1, r2) -> Integer.compare(r2.getTotalPoints(), r1.getTotalPoints())).collect(Collectors.toList());
     }
@@ -92,7 +92,7 @@ final class SonarStatsServiceImpl implements SonarStatsService {
         return new SonarStatsRow(r1.getUserAlias(), r1.getUserTeam(), r1.getTotalPoints() + r2.getTotalPoints(),
                 r1.getTotalPaidDebt() + r2.getTotalPaidDebt(), r1.getBlocker() + r2.getBlocker(),
                 r1.getCritical() + r2.getCritical(), r1.getMajor() + r2.getMajor(),
-                r1.getMinor() + r2.getMinor(), r1.getInfo() + r2.getInfo(), allBadges);
+                r1.getMinor() + r2.getMinor(), r1.getInfo() + r2.getInfo(), "TODO", allBadges);
     }
 
 

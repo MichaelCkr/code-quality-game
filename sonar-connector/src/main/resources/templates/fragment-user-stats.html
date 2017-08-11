@@ -12,6 +12,7 @@
         <th>Majors</th>
         <th>Minors</th>
         <th>Infos</th>
+        <th>Dept</th>
         <th>Points</th>
         <th style="width: 30%">Badges</th>
     </tr>
@@ -32,6 +33,7 @@
             <td th:text="${stat.major}">Majors</td>
             <td th:text="${stat.minor}">Minors</td>
             <td th:text="${stat.info}">Infos</td>
+            <td th:text="${stat.dept}">Dept</td>
             <td th:text="${stat.totalPoints}"
                 th:class="${iter.count &lt; 4}? 'cell-pos-' + ${iter.count} : ''"
                 style="font-weight: bold;">Points</td>
