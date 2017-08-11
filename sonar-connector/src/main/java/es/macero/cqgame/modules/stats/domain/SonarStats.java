@@ -17,7 +17,7 @@ public class SonarStats {
 	private int major;
 	private int minor;
 	private int info;
-	private String dept;
+	private TechnicalDept dept;
 	private int totalPoints;
 
 	private List<SonarBadge> badges;
@@ -37,7 +37,7 @@ public class SonarStats {
 	}
 
 	private void calculateDept() {
-		dept = new TechnicalDept(totalPaidDebt).toString();
+		dept = new TechnicalDept(totalPaidDebt);
 	}
 
 	private void calculatePoints() {
@@ -69,7 +69,7 @@ public class SonarStats {
 		return info;
 	}
 
-	public String getDept() {
+	public TechnicalDept getDept() {
 		return dept;
 	}
 

@@ -4,6 +4,7 @@ import java.time.Duration;
 
 public class TechnicalDept {
 
+	private int dept;
 	private long days;
 	private long hours;
 	private long minutes;
@@ -14,6 +15,7 @@ public class TechnicalDept {
 	}
 
 	public TechnicalDept(int dept) {
+		this.dept = dept;
 		Duration duration = Duration.ofMinutes(dept);
 		days = duration.toDays();
 		duration = duration.minusDays(days);
@@ -27,6 +29,14 @@ public class TechnicalDept {
 		String reslutDays = days != 0 ? days + "d " : "";
 		String resultHours = hours != 0 ? hours + "h " : "";
 		return reslutDays + resultHours + minutes + "m";
+	}
+
+	public TechnicalDept plus(TechnicalDept technicalDept) {
+		return new TechnicalDept(dept + technicalDept.getDept());
+	}
+
+	public int getDept() {
+		return dept;
 	}
 
 }

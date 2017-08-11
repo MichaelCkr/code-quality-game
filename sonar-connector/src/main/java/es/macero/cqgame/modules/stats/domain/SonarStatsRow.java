@@ -15,11 +15,11 @@ public final class SonarStatsRow {
     private int critical;
     private int major;
     private int minor;
-    private String dept;
+    private TechnicalDept dept;
     private int info;
     private Collection<SonarBadge> badges;
 
-    public SonarStatsRow(String userAlias, String userTeam, int totalPoints, int totalPaidDebt, int blocker, int critical, int major, int minor, int info, String dept, Collection<SonarBadge> badges) {
+    public SonarStatsRow(String userAlias, String userTeam, int totalPoints, int totalPaidDebt, int blocker, int critical, int major, int minor, int info, TechnicalDept dept, Collection<SonarBadge> badges) {
         super();
         this.userAlias = userAlias;
         this.userTeam = userTeam;

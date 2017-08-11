@@ -16,7 +16,7 @@ public final class SonarStatsRowBuilder {
     private int major = 0;
     private int minor = 0;
     private int info = 0;
-    private String dept;
+    private TechnicalDept dept;
     private Collection<SonarBadge> badges = Collections.emptyList();
 
     public SonarStatsRowBuilder(String userAlias, String userTeam) {
@@ -59,7 +59,7 @@ public final class SonarStatsRowBuilder {
         return this;
     }
 
-    public SonarStatsRowBuilder withDept(String dept) {
+    public SonarStatsRowBuilder withDept(TechnicalDept dept) {
     	this.dept = dept;
     	return this;
     }

@@ -92,7 +92,7 @@ final class SonarStatsServiceImpl implements SonarStatsService {
         return new SonarStatsRow(r1.getUserAlias(), r1.getUserTeam(), r1.getTotalPoints() + r2.getTotalPoints(),
                 r1.getTotalPaidDebt() + r2.getTotalPaidDebt(), r1.getBlocker() + r2.getBlocker(),
                 r1.getCritical() + r2.getCritical(), r1.getMajor() + r2.getMajor(),
-                r1.getMinor() + r2.getMinor(), r1.getInfo() + r2.getInfo(), "TODO", allBadges);
+                r1.getMinor() + r2.getMinor(), r1.getInfo() + r2.getInfo(), r1.getDept().plus(r2.getDept()), allBadges);
     }
 
 
