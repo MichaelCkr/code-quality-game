@@ -2,7 +2,6 @@ package es.macero.cqgame.modules.badges.calculators;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import org.springframework.stereotype.Component;
 

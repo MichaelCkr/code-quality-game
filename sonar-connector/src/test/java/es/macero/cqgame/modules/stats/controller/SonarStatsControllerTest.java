@@ -23,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import es.macero.cqgame.app.ApplicationTest;
 import es.macero.cqgame.modules.stats.domain.SonarStatsRow;
+import es.macero.cqgame.modules.stats.domain.TechnicalDept;
 import es.macero.cqgame.modules.stats.service.SonarStatsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,6 +35,7 @@ public class SonarStatsControllerTest{
 	private static final String JOHN_ONE = "John One";
 	private static final String TEAM_TWO = "Team Two";
 	private static final String JOHN_TWO = "John Two";
+	private static final TechnicalDept DEPT = new TechnicalDept(61);
 	private static final int INFO = 50;
 	private static final int MINOR = 40;
 	private static final int MAJOR = 30;
@@ -57,9 +59,9 @@ public class SonarStatsControllerTest{
 
 		// Creates test data
 		final SonarStatsRow statsRow1 = new SonarStatsRow(JOHN_ONE, TEAM_ONE, TOTAL_POINTS, TOTAL_PAID_DEBT, BLOCKER,
-			CRITICAL, MAJOR, MINOR, INFO, new ArrayList<>());
+			CRITICAL, MAJOR, MINOR, INFO, DEPT, new ArrayList<>());
 		final SonarStatsRow statsRow2 = new SonarStatsRow(JOHN_TWO, TEAM_TWO, TOTAL_POINTS, TOTAL_PAID_DEBT, BLOCKER,
-			CRITICAL, MAJOR, MINOR, INFO, new ArrayList<>());
+			CRITICAL, MAJOR, MINOR, INFO, DEPT, new ArrayList<>());
 		statRows = Arrays.asList(statsRow1, statsRow2);
 
 		Mockito.when(sonarStatsService.getSortedStatsPerUser()).thenReturn(statRows);

@@ -42,6 +42,7 @@ final class SonarStatsCalculatorServiceImpl implements SonarStatsCalculatorServi
 			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
 				.isBefore(legacyDate)).collect(Collectors.toList());
 
+		issuesFilteredByLegacyDate = issues;
 		int debtSum = (int) issuesFilteredByLegacyDate.stream()
 		    .map(Issue::getDebt)
 		        .filter(Objects::nonNull)
@@ -49,18 +50,6 @@ final class SonarStatsCalculatorServiceImpl implements SonarStatsCalculatorServi
 		        .map(Duration::parse)
 		        .mapToLong(Duration::toMinutes)
 		        .sum();
-//		List<Issue> issuesFilteredByLegacyDate = issues.stream()
-//			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
-//				.isBefore(legacyDate)).collect(Collectors.toList());
-//		List<Issue> issuesFilteredByCovDate = issues.stream()
-//			.filter(i -> IssueDateFormatter.format(i.getCreationDate())
-//				.isBefore(coverageDate)).collect(Collectors.toList());
-		List<Issue> issuesFilteredByLegacyDate = issues;
-		List<Issue> issuesFilteredByCovDate = issues;
-		int debtSum = (int) issuesFilteredByLegacyDate.stream().map(Issue::getDebt)
-			.filter(c -> c != null).map(Utils::durationTranslator)
-			.map(Duration::parse).mapToLong(Duration::toMinutes)
-			.sum();
 
 		Map<String, Long> typeCount = issuesFilteredByLegacyDate.stream()
 			.collect(Collectors.groupingBy(Issue::getSeverity, Collectors.counting()));
