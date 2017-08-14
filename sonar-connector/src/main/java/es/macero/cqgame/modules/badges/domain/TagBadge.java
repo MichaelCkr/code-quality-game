@@ -4,11 +4,11 @@ import java.util.function.Supplier;
 
 public class TagBadge implements Comparable<TagBadge>{
 
-	private final int treshold;
+	private final int threshold;
 	private final Supplier<SonarBadge> badgeCreator;
 
-	public TagBadge(int treshold, Supplier<SonarBadge> badgeCreator) {
-		this.treshold = treshold;
+	public TagBadge(int threshold, Supplier<SonarBadge> badgeCreator) {
+		this.threshold = threshold;
 		this.badgeCreator = badgeCreator;
 	}
 
@@ -17,7 +17,7 @@ public class TagBadge implements Comparable<TagBadge>{
 	}
 
 	public boolean isApplicable(long issueCount) {
-		return issueCount >= treshold;
+		return issueCount >= threshold;
 	}
 
 
@@ -61,6 +61,7 @@ public class TagBadge implements Comparable<TagBadge>{
 	 */
 	@Override
 	public int compareTo(TagBadge o) {
-		return -Integer.compare(this.treshold, o.treshold);
+		return Integer.compare(this.threshold, o.threshold);
 	}
+
 }
