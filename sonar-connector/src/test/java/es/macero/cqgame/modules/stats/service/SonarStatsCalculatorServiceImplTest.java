@@ -1,26 +1,30 @@
 package es.macero.cqgame.modules.stats.service;
 
-import es.macero.cqgame.modules.sonarapi.resultbeans.Issue;
-import es.macero.cqgame.modules.stats.domain.SonarStats;
-import es.macero.cqgame.util.TestUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import es.macero.cqgame.modules.sonarapi.resultbeans.Issue;
+import es.macero.cqgame.modules.stats.domain.SonarStats;
+import es.macero.cqgame.util.TestUtil;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.*;
-
-public class SonarStatsCalculatorServiceTest {
+public class SonarStatsCalculatorServiceImplTest {
 
     private static final String LEGACY_DATE_STRING = "2016-05-01";
+    private static final String LEGACY_DATE_PERIOD = "30";
 
 	private SonarStatsCalculatorService service;
 
@@ -31,7 +35,7 @@ public class SonarStatsCalculatorServiceTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        service = new SonarStatsCalculatorServiceImpl(LEGACY_DATE_STRING, badgeCalculatorService);
+        service = new SonarStatsCalculatorServiceImpl(LEGACY_DATE_STRING, LEGACY_DATE_PERIOD, badgeCalculatorService);
         when(badgeCalculatorService.awardBadges(anyListOf(Issue.class))).thenReturn(Collections.emptyList());
     }
 
@@ -82,5 +86,32 @@ public class SonarStatsCalculatorServiceTest {
         assertNotEquals(0, sonarStats.getTotalPoints());
     }
 
+    @Test
+    public void issuesNotWithinLegacyPeriod() {
+    	service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, LEGACY_DATE_PERIOD, badgeCalculatorService);
+    	Period days = Period.ofDays(10);
+		LocalDate issueDate = LocalDate.now().minus(days);
+		final Issue issue = TestUtil.createIssue(issueDate, 30, SonarStats.SeverityType.BLOCKER);
+    	final SonarStats stats = service.fromIssueList(Collections.singletonList(issue));
+    	assertEquals(0, stats.getTotalPoints());
+    }
+
+    @Test
+    public void issuesWithinLegacyPeriod() {
+    	service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, LEGACY_DATE_PERIOD, badgeCalculatorService);
+    	LocalDate issueDate = LocalDate.of(2016, 4, 20);
+    	final Issue issue = TestUtil.createIssue(issueDate, 30, SonarStats.SeverityType.BLOCKER);
+    	final SonarStats stats = service.fromIssueList(Collections.singletonList(issue));
+    	assertNotEquals(0, stats.getTotalPoints());
+    }
+
+    @Test
+    public void issuesWithoutLegacyDateAndPeriod() {
+    	service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, StringUtils.EMPTY, badgeCalculatorService);
+    	LocalDate issueDate = LocalDate.now();
+    	final Issue issue = TestUtil.createIssue(issueDate, 30, SonarStats.SeverityType.BLOCKER);
+    	final SonarStats stats = service.fromIssueList(Collections.singletonList(issue));
+    	assertNotEquals(0, stats.getTotalPoints());
+    }
 
 }
