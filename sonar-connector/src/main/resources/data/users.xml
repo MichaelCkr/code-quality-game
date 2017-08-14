@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sonarUserList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="../users.xsd">
-	<user id="admin" alias="Admin" team="Team Admin" />
 	<user id="mecker" alias="MichaelCkr" team="Team Blau" />
 	<user id="dhendrix" alias="Nicktarix" team="Team Blau" />
 	<user id="sdemary" alias="Nafetsky" team="Team Blau" />
