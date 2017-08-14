@@ -1,36 +1,30 @@
 package es.macero.cqgame.modules.badges.calculators;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
 import es.macero.cqgame.modules.badges.domain.SonarBadge;
-import es.macero.cqgame.modules.sonarapi.resultbeans.Issue;
+import es.macero.cqgame.modules.badges.domain.TagBadge;
 
 @Component
-public class CodeNimblerBadgeCalculator implements BadgeCalculator {
+public class CodeNimblerBadgeCalculator extends TagBadgeCalculator {
 
-    private static final int EXTRA_POINTS_PAPER = 50;
-    private static final int EXTRA_POINTS_BRONZE = 125;
-    private static final int EXTRA_POINTS_SILVER = 300;
-    private static final int EXTRA_POINTS_GOLDEN = 500;
+	private static final List<TagBadge> badges = Arrays.asList(
+			new TagBadge(250, () -> new SonarBadge("Graceful Tumbling Expert", "Fixing 500 or more issues with clumsy code.", 500)),
+			new TagBadge(125, () -> new SonarBadge("Dexterous Coder", "Fixing 125 or more issues with clumsy code.", 300)),
+			new TagBadge(50, () -> new SonarBadge("Agile Coder", "Fixing 50 or more issues with clumsy code.", 125)),
+			new TagBadge(10, () -> new SonarBadge("Coordinated Coder", "Fixing 10 or more issues with clumsy code.", 50)));
 
-    private static final String TAG_NAME = "clumsy";
 
-    @Override
-    public Optional<SonarBadge> badgeFromIssueList(List<Issue> issues) {
-        long count = countFilteredIssues(issues, i -> i.getTags().contains(TAG_NAME));
-        if (count >= 250) {
-            return Optional.of(new SonarBadge("Graceful Tumbling Expert", "Fixing 500 or more issues with clumsy code.", EXTRA_POINTS_GOLDEN));
-        } else if (count >= 125) {
-            return Optional.of(new SonarBadge("Dexterous Coder", "Fixing 125 or more issues with clumsy code.", EXTRA_POINTS_SILVER));
-        } else if (count >= 50) {
-            return Optional.of(new SonarBadge("Agile Coder", "Fixing 50 or more issues with clumsy code.", EXTRA_POINTS_BRONZE));
-        } else if (count >= 10) {
-            return Optional.of(new SonarBadge("Coordinated Coder", "Fixing 10 or more issues with clumsy code.", EXTRA_POINTS_PAPER));
-        } else {
-            return Optional.empty();
-        }
-    }
+	private static final String TAG_NAME = "clumsy";
+
+	public List<TagBadge> getBadges() {
+		return badges;
+	}
+
+	String getTagName() {
+		return TAG_NAME;
+	}
 }

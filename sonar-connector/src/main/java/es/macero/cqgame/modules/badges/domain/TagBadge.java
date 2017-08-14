@@ -1,5 +1,6 @@
 package es.macero.cqgame.modules.badges.domain;
 
+import java.util.Comparator;
 import java.util.function.Supplier;
 
 public class TagBadge implements Comparable<TagBadge>{
@@ -61,6 +62,7 @@ public class TagBadge implements Comparable<TagBadge>{
 	 */
 	@Override
 	public int compareTo(TagBadge o) {
-		return -Integer.compare(this.treshold, o.treshold);
+		return Integer.compare(this.treshold, o.treshold);
 	}
+
 }
