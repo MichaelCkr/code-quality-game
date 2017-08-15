@@ -3,6 +3,8 @@ package es.macero.cqgame.modules.stats.service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +44,7 @@ final class SonarStatsCalculatorServiceImpl implements SonarStatsCalculatorServi
 	@Override
 	public SonarStats fromIssueList(final List<Issue> issues) {
 		// For the stats we only use those issues created before 'legacy date'
-		issues.stream().map(this::formatDate).forEach(log::info);
+		issues.stream().map(i -> formatDate(i.getCreationDate())).forEach(log::info);
 		List<Issue> issuesFilteredByLegacyTime;
 		if (legacyDate != null) {
 			issuesFilteredByLegacyTime = issues.stream().filter(this::isBeforeLegacyDate).collect(Collectors.toList());
@@ -70,18 +72,20 @@ final class SonarStatsCalculatorServiceImpl implements SonarStatsCalculatorServi
 	}
 
 	private boolean isBeforeLegacyDate(Issue i) {
-		LocalDate date = formatDate(i);
+		LocalDate date = formatDate(i.getCreationDate());
 		return date.isBefore(legacyDate);
 	}
 
-	private boolean isOldEnough(Issue i) {
-		LocalDate date = formatDate(i);
-		LocalDate nowMinusPeriod = LocalDate.now().minus(legacyPeriod);
-		return date.isBefore(nowMinusPeriod);
+	protected boolean isOldEnough(Issue i) {
+		LocalDate creationData = formatDate(i.getCreationDate());
+		LocalDate fixDate = formatDate((i.getCloseDate()));
+		long age = creationData.until(fixDate, ChronoUnit.DAYS);
+
+		return age >= legacyPeriod.getDays();
 	}
 
-	private LocalDate formatDate(Issue i) {
-		return IssueDateFormatter.format(i.getCreationDate());
+	private LocalDate formatDate(String date) {
+		return IssueDateFormatter.format(date);
 	}
 
 }

@@ -21,7 +21,7 @@ public class UnitTesterBadgeCalculatorTest {
 
 	@Test
 	public void issuesAfterCoverageDateAreNotProcessedForBadges() {
-		final Issue issue = createIssue(LocalDate.of(2016, 7, 1), 30, SonarStats.SeverityType.BLOCKER);
+		final Issue issue = createIssue(LocalDate.of(2016, 7, 1), null, 30, SonarStats.SeverityType.BLOCKER);
 		issue.setRule("common-java:InsufficientLineCoverage");
 		Optional<SonarBadge> badge = calculator.badgeFromIssueList(Collections.singletonList(issue));
 		// List should be empty, issue does not pass the date filter.
@@ -30,7 +30,7 @@ public class UnitTesterBadgeCalculatorTest {
 
 	@Test
 	public void issuesBeforeCoverageDateAreProcessedForBadges() {
-		final Issue issue = createIssue(LocalDate.of(2016, 5, 20), 30, SonarStats.SeverityType.BLOCKER);
+		final Issue issue = createIssue(LocalDate.of(2016, 5, 20), null, 30, SonarStats.SeverityType.BLOCKER);
 		issue.setRule("common-java:InsufficientLineCoverage");
 		Optional<SonarBadge> badge = calculator.badgeFromIssueList(Collections.singletonList(issue));
 		// List should be empty, issue does not pass the date filter.
