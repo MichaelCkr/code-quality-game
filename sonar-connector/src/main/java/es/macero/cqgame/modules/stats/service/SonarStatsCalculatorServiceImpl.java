@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -76,7 +75,7 @@ final class SonarStatsCalculatorServiceImpl implements SonarStatsCalculatorServi
 		return date.isBefore(legacyDate);
 	}
 
-	protected boolean isOldEnough(Issue i) {
+	private boolean isOldEnough(Issue i) {
 		LocalDate creationData = formatDate(i.getCreationDate());
 		LocalDate fixDate = formatDate((i.getCloseDate()));
 		long age = creationData.until(fixDate, ChronoUnit.DAYS);
