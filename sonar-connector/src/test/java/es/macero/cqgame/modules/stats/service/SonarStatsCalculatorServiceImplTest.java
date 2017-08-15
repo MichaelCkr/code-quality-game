@@ -88,7 +88,7 @@ public class SonarStatsCalculatorServiceImplTest {
 
     @Test
     public void issuesNotWithinLegacyPeriod() {
-    	service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, LEGACY_DATE_PERIOD, badgeCalculatorService);
+	    SonarStatsCalculatorServiceImpl service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, LEGACY_DATE_PERIOD, badgeCalculatorService);
     	Period days = Period.ofDays(10);
 		LocalDate issueDate = LocalDate.now().minus(days);
 		final Issue issue = TestUtil.createIssue(issueDate, 30, SonarStats.SeverityType.BLOCKER);
@@ -98,7 +98,7 @@ public class SonarStatsCalculatorServiceImplTest {
 
     @Test
     public void issuesWithinLegacyPeriod() {
-    	service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, LEGACY_DATE_PERIOD, badgeCalculatorService);
+	    SonarStatsCalculatorServiceImpl service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, LEGACY_DATE_PERIOD, badgeCalculatorService);
     	LocalDate issueDate = LocalDate.of(2016, 4, 20);
     	final Issue issue = TestUtil.createIssue(issueDate, 30, SonarStats.SeverityType.BLOCKER);
     	final SonarStats stats = service.fromIssueList(Collections.singletonList(issue));
@@ -107,11 +107,12 @@ public class SonarStatsCalculatorServiceImplTest {
 
     @Test
     public void issuesWithoutLegacyDateAndPeriod() {
-    	service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, StringUtils.EMPTY, badgeCalculatorService);
+    	SonarStatsCalculatorServiceImpl service = new SonarStatsCalculatorServiceImpl(StringUtils.EMPTY, StringUtils.EMPTY, badgeCalculatorService);
     	LocalDate issueDate = LocalDate.now();
     	final Issue issue = TestUtil.createIssue(issueDate, 30, SonarStats.SeverityType.BLOCKER);
     	final SonarStats stats = service.fromIssueList(Collections.singletonList(issue));
     	assertNotEquals(0, stats.getTotalPoints());
     }
 
+    
 }
