@@ -22,9 +22,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import es.macero.cqgame.app.ApplicationTest;
+import es.macero.cqgame.modules.stats.domain.SonarStats;
 import es.macero.cqgame.modules.stats.domain.SonarStatsRow;
 import es.macero.cqgame.modules.stats.domain.TechnicalDept;
 import es.macero.cqgame.modules.stats.service.SonarStatsService;
+import es.macero.cqgame.modules.users.domain.SonarUser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -42,7 +44,6 @@ public class SonarStatsControllerTest{
 	private static final int CRITICAL = 20;
 	private static final int BLOCKER = 10;
 	private static final int TOTAL_PAID_DEBT = 100;
-	private static final int TOTAL_POINTS = 25;
 
 	@Autowired
 	private WebApplicationContext context;
@@ -58,10 +59,9 @@ public class SonarStatsControllerTest{
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.context).build();
 
 		// Creates test data
-		final SonarStatsRow statsRow1 = new SonarStatsRow(JOHN_ONE, TEAM_ONE, TOTAL_POINTS, TOTAL_PAID_DEBT, BLOCKER,
-			CRITICAL, MAJOR, MINOR, INFO, DEPT, new ArrayList<>());
-		final SonarStatsRow statsRow2 = new SonarStatsRow(JOHN_TWO, TEAM_TWO, TOTAL_POINTS, TOTAL_PAID_DEBT, BLOCKER,
-			CRITICAL, MAJOR, MINOR, INFO, DEPT, new ArrayList<>());
+		SonarStats stats = new SonarStats(TOTAL_PAID_DEBT, BLOCKER, CRITICAL, MAJOR, MINOR, INFO, new ArrayList<>());
+		final SonarStatsRow statsRow1 = new SonarStatsRow(new SonarUser("", JOHN_ONE, TEAM_ONE), stats);
+		final SonarStatsRow statsRow2 = new SonarStatsRow(new SonarUser("", JOHN_TWO, TEAM_TWO), stats);
 		statRows = Arrays.asList(statsRow1, statsRow2);
 
 		Mockito.when(sonarStatsService.getSortedStatsPerUser()).thenReturn(statRows);

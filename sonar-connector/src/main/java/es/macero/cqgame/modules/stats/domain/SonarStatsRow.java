@@ -1,37 +1,77 @@
 package es.macero.cqgame.modules.stats.domain;
 
-import es.macero.cqgame.modules.badges.domain.SonarBadge;
-import lombok.Getter;
-
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-@Getter
+import es.macero.cqgame.modules.badges.domain.SonarBadge;
+import es.macero.cqgame.modules.users.domain.SonarUser;
+
 public final class SonarStatsRow {
-    private String userAlias;
-    private String userTeam;
-    private int totalPoints;
-    private int totalPaidDebt;
-    private int blocker;
-    private int critical;
-    private int major;
-    private int minor;
-    private TechnicalDept dept;
-    private int info;
-    private Collection<SonarBadge> badges;
+	private SonarUser user;
+	private SonarStats stats;
 
-    public SonarStatsRow(String userAlias, String userTeam, int totalPoints, int totalPaidDebt, int blocker, int critical, int major, int minor, int info, TechnicalDept dept, Collection<SonarBadge> badges) {
-        super();
-        this.userAlias = userAlias;
-        this.userTeam = userTeam;
-        this.totalPoints = totalPoints;
-        this.totalPaidDebt = totalPaidDebt;
-        this.blocker = blocker;
-        this.critical = critical;
-        this.major = major;
-        this.minor = minor;
-        this.info = info;
-        this.dept = dept;
-        this.badges = badges;
+	public SonarStatsRow combine(final SonarStatsRow r2) {
+	    Set<SonarBadge> allBadges = new HashSet<>();
+	    allBadges.addAll(getBadges());
+	    allBadges.addAll(r2.getBadges());
+		return new SonarStatsRowBuilder(user.getAlias(), user.getTeam())
+				.withTotalPaidDebt(getTotalPaidDebt() + r2.getTotalPaidDebt())
+				.withBlocker(getBlocker() + r2.getBlocker())
+				.withCritical(getCritical() + r2.getCritical())
+				.withMajor(getMajor() + r2.getMajor())
+				.withMinor(getMinor() + r2.getMinor())
+				.withInfo(getInfo() + r2.getInfo())
+				.withBadges(allBadges)
+				.createSonarStatsRow();
+	}
+
+	public String getUserAlias() {
+		return user.getAlias();
+	}
+
+	public String getUserTeam() {
+		return user.getTeam();
+	}
+
+	public int getTotalPoints() {
+		return stats.getTotalPoints();
+	}
+
+	public int getTotalPaidDebt() {
+		return stats.getTotalPaidDebt();
+	}
+
+	public int getBlocker() {
+		return stats.getBlocker();
+	}
+
+	public int getCritical() {
+		return stats.getCritical();
+	}
+
+	public int getMajor() {
+		return stats.getMajor();
+	}
+
+	public int getMinor() {
+		return stats.getMinor();
+	}
+
+	public TechnicalDept getDept() {
+		return stats.getDept();
+	}
+
+	public int getInfo() {
+		return stats.getInfo();
+	}
+
+	public Collection<SonarBadge> getBadges() {
+		return stats.getBadges();
+	}
+
+    public SonarStatsRow(SonarUser user, SonarStats stats) {
+		this.user = user;
+		this.stats = stats;
     }
-
 }

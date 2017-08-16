@@ -2,7 +2,6 @@ package es.macero.cqgame.modules.stats.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.macero.cqgame.modules.users.dao.SonarUserRepository;
-import es.macero.cqgame.modules.badges.domain.SonarBadge;
 import es.macero.cqgame.modules.stats.domain.SonarStats;
 import es.macero.cqgame.modules.stats.domain.SonarStatsRow;
 import es.macero.cqgame.modules.users.domain.SonarUser;
@@ -69,10 +67,7 @@ final class SonarStatsServiceImpl implements SonarStatsService {
         for (Entry<String, SonarStats> entry : statsPerId.entrySet()) {
             SonarUser user = idsAndUsers.get(entry.getKey());
             SonarStats stats = entry.getValue();
-            rows.add(new SonarStatsRow(user.getAlias(), user.getTeam(), stats.getTotalPoints(),
-                    stats.getTotalPaidDebt(), stats.getBlocker(),
-                    stats.getCritical(), stats.getMajor(), stats.getMinor(),
-                    stats.getInfo(), stats.getDept(), stats.getBadges()));
+            rows.add(new SonarStatsRow(user, stats));
         }
         return rows.stream().sorted((r1, r2) -> Integer.compare(r2.getTotalPoints(), r1.getTotalPoints())).collect(Collectors.toList());
     }
@@ -80,19 +75,9 @@ final class SonarStatsServiceImpl implements SonarStatsService {
     @Override
     public Collection<SonarStatsRow> getSortedStatsPerTeam() {
         return getSortedStatsPerUser().stream().collect(
-                Collectors.toMap(SonarStatsRow::getUserTeam, Function.identity(), SonarStatsServiceImpl::combine))
+                Collectors.toMap(SonarStatsRow::getUserTeam, Function.identity(), SonarStatsRow::combine))
                 .values().stream()
                 .sorted((r1, r2) -> Integer.compare(r2.getTotalPoints(), r1.getTotalPoints())).collect(Collectors.toList());
-    }
-
-    private static SonarStatsRow combine(final SonarStatsRow r1, final SonarStatsRow r2) {
-        Set<SonarBadge> allBadges = new HashSet<>();
-        allBadges.addAll(r1.getBadges());
-        allBadges.addAll(r2.getBadges());
-        return new SonarStatsRow(r1.getUserAlias(), r1.getUserTeam(), r1.getTotalPoints() + r2.getTotalPoints(),
-                r1.getTotalPaidDebt() + r2.getTotalPaidDebt(), r1.getBlocker() + r2.getBlocker(),
-                r1.getCritical() + r2.getCritical(), r1.getMajor() + r2.getMajor(),
-                r1.getMinor() + r2.getMinor(), r1.getInfo() + r2.getInfo(), r1.getDept().plus(r2.getDept()), allBadges);
     }
 
 

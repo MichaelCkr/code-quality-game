@@ -2,6 +2,9 @@ package es.macero.cqgame.modules.badges.domain;
 
 import java.util.function.Supplier;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(of = "threshold")
 public class TagBadge implements Comparable<TagBadge>{
 
 	private final int threshold;

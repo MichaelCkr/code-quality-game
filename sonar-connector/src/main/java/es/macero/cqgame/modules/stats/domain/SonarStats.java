@@ -3,9 +3,14 @@ package es.macero.cqgame.modules.stats.domain;
 import java.util.List;
 
 import es.macero.cqgame.modules.badges.domain.SonarBadge;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString
+@Setter(AccessLevel.PACKAGE)
+@NoArgsConstructor
 public class SonarStats {
 	public enum SeverityType {
 		BLOCKER, CRITICAL, MAJOR, MINOR, INFO
