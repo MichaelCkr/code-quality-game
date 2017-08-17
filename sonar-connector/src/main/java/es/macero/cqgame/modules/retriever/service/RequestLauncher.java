@@ -21,15 +21,13 @@ import es.macero.cqgame.modules.sonarapi.resultbeans.Paging;
 import es.macero.cqgame.modules.stats.service.SonarStatsService;
 import es.macero.cqgame.util.ApiHttpUtils;
 
-abstract class RequestLauncher implements Consumer<String> {
+public abstract class RequestLauncher implements Consumer<String> {
 
 	private static final Log log = LogFactory.getLog(RequestLauncher.class);
-	private SonarStatsService statsService;
 	private String sonarUser;
 	private String sonarPassword;
 
-	RequestLauncher(final SonarStatsService statsService, final String sonarUser, final String sonarPassword) {
-		this.statsService = statsService;
+	public RequestLauncher(final String sonarUser, final String sonarPassword) {
 		this.sonarUser = sonarUser;
 		this.sonarPassword = sonarPassword;
 	}

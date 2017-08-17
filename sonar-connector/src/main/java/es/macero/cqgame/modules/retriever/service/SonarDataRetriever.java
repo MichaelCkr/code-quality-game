@@ -38,7 +38,7 @@ final class SonarDataRetriever {
 	@Scheduled(fixedRate = 10 * 60000)
 	public void retrieveData() {
 		String sonarUrl = configuration.getUrl();
-		RequestLauncher requestLauncher = new RequestLauncher(statsService, configuration.getUser(),
+		RequestLauncher requestLauncher = new RequestLauncher(configuration.getUser(),
 				configuration.getPassword()) {
 			@Override
 			URI getUrl(final String assignee, final int pageIndex) {
