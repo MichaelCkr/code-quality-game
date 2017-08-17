@@ -41,7 +41,7 @@ final class SonarDataRetriever {
 		RequestLauncher requestLauncher = new RequestLauncher(configuration.getUser(),
 				configuration.getPassword()) {
 			@Override
-			URI getUrl(final String assignee, final int pageIndex) {
+			public URI getUrl(final String assignee, final int pageIndex) {
 				URI uri = UriComponentsBuilder.fromHttpUrl(sonarUrl + GET_ISSUES_COMMAND)
 						.buildAndExpand(assignee.toLowerCase() + "," + assignee.toUpperCase(), "FIXED", pageIndex, 500)
 						.toUri();
@@ -50,7 +50,7 @@ final class SonarDataRetriever {
 			}
 
 			@Override
-			void process(final String id, List<Issue> issues) {
+			public void process(final String id, List<Issue> issues) {
 				statsService.updateStats(id, issues);
 			}
 		};

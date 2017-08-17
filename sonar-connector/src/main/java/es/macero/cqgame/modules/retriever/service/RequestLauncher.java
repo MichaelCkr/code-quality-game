@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import es.macero.cqgame.modules.sonarapi.resultbeans.Issue;
 import es.macero.cqgame.modules.sonarapi.resultbeans.Issues;
 import es.macero.cqgame.modules.sonarapi.resultbeans.Paging;
-import es.macero.cqgame.modules.stats.service.SonarStatsService;
 import es.macero.cqgame.util.ApiHttpUtils;
 
 public abstract class RequestLauncher implements Consumer<String> {
@@ -64,7 +63,7 @@ public abstract class RequestLauncher implements Consumer<String> {
 		return new HttpHeaders();
 	}
 
-	abstract URI getUrl(final String assignee, final int pageIndex);
+	public abstract URI getUrl(final String assignee, final int pageIndex);
 
-	abstract void process(final String id, List<Issue> issues);
+	public abstract void process(final String id, List<Issue> issues);
 }
