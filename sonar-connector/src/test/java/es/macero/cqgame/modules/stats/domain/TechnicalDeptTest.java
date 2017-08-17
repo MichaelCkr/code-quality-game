@@ -12,7 +12,7 @@ public class TechnicalDeptTest {
 
 	@Test
 	public void testToStringWithDays() {
-		TechnicalDept t = new TechnicalDept((int)Duration.ofDays(1).toMinutes());
+		TechnicalDept t = new TechnicalDept((int) Duration.ofDays(1).toMinutes());
 		assertThat(t.toString(), is("1d 0h 0m"));
 	}
 
@@ -33,6 +33,14 @@ public class TechnicalDeptTest {
 	}
 
 	@Test
+	public void testToStringOnlyMinutes() {
+		Duration duration = Duration.ofDays(0);
+		duration = duration.plus(2, ChronoUnit.MINUTES);
+		TechnicalDept t = new TechnicalDept((int) duration.toMinutes());
+		assertThat(t.toString(), is("2m"));
+	}
+
+	@Test
 	public void testToStringWithDaysAndHoursAndMinutes() {
 		Duration duration = Duration.ofDays(1);
 		duration = duration.plus(2, ChronoUnit.HOURS);
@@ -46,7 +54,7 @@ public class TechnicalDeptTest {
 		Duration duration = Duration.ofDays(0);
 		duration = duration.plus(2, ChronoUnit.HOURS);
 		TechnicalDept t = new TechnicalDept((int) duration.toMinutes());
-		assertThat(t.toString(), is("0d 2h 0m"));
+		assertThat(t.toString(), is("2h 0m"));
 	}
 
 	@Test
@@ -55,7 +63,7 @@ public class TechnicalDeptTest {
 		duration = duration.plus(2, ChronoUnit.HOURS);
 		duration = duration.plus(17, ChronoUnit.MINUTES);
 		TechnicalDept t = new TechnicalDept((int) duration.toMinutes());
-		assertThat(t.toString(), is("0d 2h 17m"));
+		assertThat(t.toString(), is("2h 17m"));
 	}
 
 }

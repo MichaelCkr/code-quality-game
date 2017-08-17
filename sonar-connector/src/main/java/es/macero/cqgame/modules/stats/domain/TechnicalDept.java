@@ -19,7 +19,15 @@ public class TechnicalDept {
 
 	@Override
 	public String toString() {
-		return DurationFormatUtils.formatDuration(Duration.ofMinutes(dept).toMillis(), "d'd' H'h' m'm'", false);
+		Duration duration = Duration.ofMinutes(dept);
+		String formatter = "m'm'";
+		if (duration.toHours() > 0) {
+			formatter = "H'h' " + formatter;
+		}
+		if (duration.toDays() > 0) {
+			formatter = "d'd' " + formatter;
+		}
+		return DurationFormatUtils.formatDuration(duration.toMillis(), formatter, false);
 	}
 
 	public TechnicalDept plus(TechnicalDept technicalDept) {
