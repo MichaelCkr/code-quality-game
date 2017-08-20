@@ -1,6 +1,7 @@
 package es.macero.cqgame.app;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.batch.JobExecutionExitCodeGenerator;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -32,8 +35,6 @@ public class HookApplication extends SpringBootServletInitializer {
 	// componentKeys=com.nextlevel.editools:edi.validation:src/main/java/com/nextlevel/editools/edi/validation/ClonerFactory.java
 	// componentKeys=B2B2.5-trunk:extensions:core-extension:com.nextlevel.b2b.dividing.network:src/main/java/org/b2bbp/dividing/network/actions/strategies/total/INSRPT_SplitStrategy.java
 
-	private HookApplication application;
-	
 	private SonarIssueAssigner issueAssigner;
 
 	@Autowired
@@ -51,7 +52,6 @@ public class HookApplication extends SpringBootServletInitializer {
 		springApplication.setApplicationContextClass(AnnotationConfigApplicationContext.class);
 		//springApplication.setWebEnvironment(true);
 		ConfigurableApplicationContext applicationContext = springApplication.run(args);
-		HookApplication application = applicationContext.getBean(HookApplication.class);
 		ConfigurableEnvironment environment = (ConfigurableEnvironment) applicationContext.getEnvironment();
 		//springApplication.setEnvironment(environment);
 		//ApplicationEnvironmentPreparedEvent event = new ApplicationEnvironmentPreparedEvent(springApplication, new String[] {},
@@ -59,13 +59,19 @@ public class HookApplication extends SpringBootServletInitializer {
 		//context.publishEvent(event);
 		//Environment environment2 = context.getEnvironment();
 		String[] names = applicationContext.getBeanDefinitionNames();
+		HookApplication application = applicationContext.getBean(HookApplication.class);
+		application.process(args);
+		SpringApplication.exit(applicationContext, new JobExecutionExitCodeGenerator());
+	}
+
+	void process(String[] args) throws URISyntaxException, IOException {
 		String file = args[0];
 		String depth = args[1];
 		String messageFile = args[2];
 		String folder = args[3];
 		Path files = getPath(file);
 		List<String> allLines = Files.readAllLines(files);
-		application.process(allLines);
+		process(allLines);
 		System.err.println(allLines);
 		Path message = getPath(messageFile);
 		String commitMessage = new String(Files.readAllBytes(message));
@@ -74,9 +80,6 @@ public class HookApplication extends SpringBootServletInitializer {
 
 	private void process(List<String> allLines) {
 		allLines.stream().forEach(issueAssigner::assignIssues);
-//		for (String classname : allLines) {
-//			//issueAssigner.assignIssues(classname);
-//		}
 	}
 
 	private static Path getPath(String file) throws URISyntaxException {

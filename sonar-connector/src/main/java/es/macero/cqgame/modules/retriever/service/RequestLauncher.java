@@ -25,12 +25,13 @@ public abstract class RequestLauncher implements Consumer<String> {
 	private static final Log log = LogFactory.getLog(RequestLauncher.class);
 	private String sonarUser;
 	private String sonarPassword;
-	private HttpMethod method;
+	private RestTemplate restTemplate;
+	private HttpMethod method = HttpMethod.GET;
 
-	public RequestLauncher(final String sonarUser, final String sonarPassword, HttpMethod method) {
+	public RequestLauncher(final String sonarUser, final String sonarPassword, RestTemplate restTemplate) {
 		this.sonarUser = sonarUser;
 		this.sonarPassword = sonarPassword;
-		this.method = method;
+		this.restTemplate = restTemplate;
 	}
 
 	@Override
@@ -40,17 +41,17 @@ public abstract class RequestLauncher implements Consumer<String> {
 			Integer totalPages = 1;
 			List<Issue> issues = new ArrayList<>();
 			while (pageIndex <= totalPages) {
-				RestTemplate restTemplate = new RestTemplate();
 				HttpEntity<String> request = new HttpEntity<>(getHeaders());
 				URI uri = getUrl(id, pageIndex);
 				ResponseEntity<Issues> response = restTemplate.exchange(uri, method, request, Issues.class);
+				Issues body = response.getBody();
 				if (pageIndex == 1) {
-					Paging paging = response.getBody().getPaging();
+					Paging paging = body.getPaging();
 					if (paging != null) {
 						totalPages = (Integer) paging.getAdditionalProperties().get("pages");
 					}
 				}
-				issues.addAll(response.getBody().getIssues());
+				issues.addAll(body.getIssues());
 				pageIndex++;
 			}
 			process(id, issues);
@@ -70,4 +71,8 @@ public abstract class RequestLauncher implements Consumer<String> {
 	public abstract URI getUrl(final String assignee, final int pageIndex);
 
 	public abstract void process(final String id, List<Issue> issues);
+
+	public void setMethod(HttpMethod method) {
+		this.method = method;
+	}
 }

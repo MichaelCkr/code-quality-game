@@ -18,6 +18,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import es.macero.cqgame.modules.configuration.domain.SonarServerConfiguration;
@@ -64,7 +65,8 @@ public class SonarIssueAssigner {
 		String sonarUrl = "http://ci.next-level-integration.com/sonar/";
 		String user = configuration.getUser();
 		String passwd = configuration.getPassword();
-		RequestLauncher launcher = new RequestLauncher(user, passwd, HttpMethod.GET) {
+		RestTemplate restTemplate = new RestTemplate();
+		RequestLauncher launcher = new RequestLauncher(user, passwd, restTemplate) {
 
 			@Override
 			public void process(String id, List<Issue> issues) {
@@ -93,7 +95,7 @@ public class SonarIssueAssigner {
 		};
 		launcher.accept("mecker");
 		System.err.println(issueKeys);
-		RequestLauncher launcher2 = new RequestLauncher(user, passwd, HttpMethod.POST) {
+		RequestLauncher launcher2 = new RequestLauncher(user, passwd, restTemplate) {
 
 			@Override
 			public void process(String id, List<Issue> issues) {
@@ -110,6 +112,7 @@ public class SonarIssueAssigner {
 				return uri;
 			}
 		};
+		launcher2.setMethod(HttpMethod.POST);
 		launcher2.accept("mecker");
 	}
 }
