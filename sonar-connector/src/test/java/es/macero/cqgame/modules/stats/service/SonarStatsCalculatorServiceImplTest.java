@@ -7,9 +7,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.when;
 
-import java.security.acl.LastOwnerException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,7 +28,6 @@ public class SonarStatsCalculatorServiceImplTest {
     private static final String LEGACY_DATE_PERIOD = "30";
 
 	private SonarStatsCalculatorService service;
-
 
     @Mock
     private BadgeCalculatorService badgeCalculatorService;
