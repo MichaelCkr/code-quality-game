@@ -18,36 +18,29 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import es.macero.cqgame.modules.configuration.service.SonarServerConfigurationService;
 import es.macero.cqgame.modules.retriever.service.SonarIssueAssigner;
 
-//@Service
 @ComponentScan(basePackages = "es.macero.cqgame")
 @EnableAutoConfiguration
 //@Configurable
-//@PropertySource("classpath:config.properties")
 public class HookApplication extends SpringBootServletInitializer {
 
 	// componentKeys=com.nextlevel.editools:edi.validation:src/main/java/com/nextlevel/editools/edi/validation/ClonerFactory.java
 	// componentKeys=B2B2.5-trunk:extensions:core-extension:com.nextlevel.b2b.dividing.network:src/main/java/org/b2bbp/dividing/network/actions/strategies/total/INSRPT_SplitStrategy.java
 
-	//@Autowired
-	//private static HookApplication application;
-	//@Autowired
-	//private SonarIssueAssigner issueAssigner;
+	private HookApplication application;
+	
+	private SonarIssueAssigner issueAssigner;
 
 	@Autowired
 	public HookApplication(final SonarIssueAssigner issueAssigner) {
-		System.err.println("TEST");
+		this.issueAssigner=issueAssigner;
 	}
 	
-//	@Autowired
-//	public HookApplication() {
-//		System.err.println("TEST");
-//	}
-
 	public static void main(String[] args) throws Exception {
         //SpringApplication.run(HookApplication.class, args);
 		//ApplicationContext context = new AnnotationConfigApplicationContext("es.macero.cqgame");
@@ -58,7 +51,7 @@ public class HookApplication extends SpringBootServletInitializer {
 		springApplication.setApplicationContextClass(AnnotationConfigApplicationContext.class);
 		//springApplication.setWebEnvironment(true);
 		ConfigurableApplicationContext applicationContext = springApplication.run(args);
-		//ApplicationContext context = new AnnotationConfigApplicationContext(SonarIssueAssigner.class);
+		HookApplication application = applicationContext.getBean(HookApplication.class);
 		ConfigurableEnvironment environment = (ConfigurableEnvironment) applicationContext.getEnvironment();
 		//springApplication.setEnvironment(environment);
 		//ApplicationEnvironmentPreparedEvent event = new ApplicationEnvironmentPreparedEvent(springApplication, new String[] {},
@@ -72,7 +65,7 @@ public class HookApplication extends SpringBootServletInitializer {
 		String folder = args[3];
 		Path files = getPath(file);
 		List<String> allLines = Files.readAllLines(files);
-		//application.process(allLines);
+		application.process(allLines);
 		System.err.println(allLines);
 		Path message = getPath(messageFile);
 		String commitMessage = new String(Files.readAllBytes(message));
@@ -80,9 +73,10 @@ public class HookApplication extends SpringBootServletInitializer {
 	}
 
 	private void process(List<String> allLines) {
-		for (String classname : allLines) {
-			//issueAssigner.assignIssues(classname);
-		}
+		allLines.stream().forEach(issueAssigner::assignIssues);
+//		for (String classname : allLines) {
+//			//issueAssigner.assignIssues(classname);
+//		}
 	}
 
 	private static Path getPath(String file) throws URISyntaxException {

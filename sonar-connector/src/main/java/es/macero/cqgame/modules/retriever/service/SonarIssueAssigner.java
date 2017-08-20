@@ -7,10 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -27,9 +30,9 @@ public class SonarIssueAssigner {
 
 	private static final String GET_ISSUES_FROM_CLASS = "/api/issues/search?componentKeys={projectId}:{moduleId}:{classPath}&statuses={status}&assigned={assigned}";
 	private static final String POST_ISSUES_ASSIGN = "/api/issues/bulk_change?actions={actions}&assign.assignee={assignee}&issues={issueKey}";
-	private SonarServerConfiguration configuration;
 	private static Map<String, String> mapping;
-	private static List<String> issueKeys = new ArrayList<>();
+	private SonarServerConfiguration configuration;
+	private List<String> issueKeys = new ArrayList<>();
 
 	static {
 		Map<String, String> map = new HashMap<>();
@@ -41,19 +44,15 @@ public class SonarIssueAssigner {
 	}
 
 	@Autowired
-	public SonarIssueAssigner(@Value("${sonarUser}") final String test) {
-		System.err.println(test);
+	public SonarIssueAssigner(final SonarServerConfigurationService configurationService) {
+		this.configuration = configurationService.getConfiguration();
 	}
-//	@Autowired
-//	public SonarIssueAssigner(final SonarServerConfigurationService configurationService) {
-//		this.configuration = configurationService.getConfiguration();
-//	}
 
 	public void assignIssues(String classname) {
 		processSingleClass(classname);
 	}
 
-	private static void processSingleClass(String classname) {
+	private void processSingleClass(String classname) {
 		for (Entry<String, String> mapElement : mapping.entrySet()) {
 			if (StringUtils.contains(classname, mapElement.getKey())) {
 				processProject(mapElement.getValue(), mapElement.getKey(), classname);
@@ -61,26 +60,32 @@ public class SonarIssueAssigner {
 		}
 	}
 
-	private static void processProject(String projectId, String moduleId, String classname) {
+	private void processProject(String projectId, String moduleId, String classname) {
 		String sonarUrl = "http://ci.next-level-integration.com/sonar/";
-		RequestLauncher launcher = new RequestLauncher("admin", "Support1*", HttpMethod.GET) {
+		String user = configuration.getUser();
+		String passwd = configuration.getPassword();
+		RequestLauncher launcher = new RequestLauncher(user, passwd, HttpMethod.GET) {
 
 			@Override
 			public void process(String id, List<Issue> issues) {
-				for (Issue issue : issues) {
-					System.err.println(issue);
-					issueKeys.add(issue.getKey());
-				}
+				issueKeys = issues.stream().map(Issue::getKey).collect(Collectors.toList());
+				System.err.println(issueKeys);
+				// for (Issue issue : issues) {
+				// System.err.println(issue);
+				// issueKeys.add(issue.getKey());
+				// }
 			}
 
 			@Override
 			public URI getUrl(String assignee, int pageIndex) {
 				System.err.println(assignee);
 				System.err.println(pageIndex);
+				String issueStatus = "OPEN";
+				String isAssigned = "false";
 				URI uri = UriComponentsBuilder.fromHttpUrl(sonarUrl + GET_ISSUES_FROM_CLASS)
 						.buildAndExpand("assign", moduleId,
-								"src/main/java/com/nextlevel/editools/edi/validation/ClonerFactory.java", "OPEN",
-								"false")
+								"src/main/java/com/nextlevel/editools/edi/validation/ClonerFactory.java", issueStatus,
+								isAssigned)
 						.toUri();
 				System.err.println(uri);
 				return uri;
@@ -88,7 +93,7 @@ public class SonarIssueAssigner {
 		};
 		launcher.accept("mecker");
 		System.err.println(issueKeys);
-		RequestLauncher launcher2 = new RequestLauncher("admin", "Support1*", HttpMethod.POST) {
+		RequestLauncher launcher2 = new RequestLauncher(user, passwd, HttpMethod.POST) {
 
 			@Override
 			public void process(String id, List<Issue> issues) {
