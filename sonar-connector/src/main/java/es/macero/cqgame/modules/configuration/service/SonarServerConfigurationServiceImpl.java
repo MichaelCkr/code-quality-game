@@ -1,18 +1,23 @@
 package es.macero.cqgame.modules.configuration.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
+
 import es.macero.cqgame.modules.configuration.dao.SonarServerConfigurationDao;
 import es.macero.cqgame.modules.configuration.domain.SonarServerConfiguration;
 import es.macero.cqgame.modules.configuration.domain.sonar.SonarAuthenticationResponse;
 import es.macero.cqgame.modules.configuration.domain.sonar.SonarServerStatus;
 import es.macero.cqgame.util.ApiHttpUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 final class SonarServerConfigurationServiceImpl implements SonarServerConfigurationService {
@@ -51,9 +56,8 @@ final class SonarServerConfigurationServiceImpl implements SonarServerConfigurat
         } catch (final HttpClientErrorException clientErrorException) {
             if (clientErrorException.getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 return new SonarServerStatus(SonarServerStatus.Key.UNAUTHORIZED);
-            } else {
-                return new SonarServerStatus(SonarServerStatus.Key.UNKNOWN_ERROR, clientErrorException.getMessage());
             }
+			return new SonarServerStatus(SonarServerStatus.Key.UNKNOWN_ERROR, clientErrorException.getMessage());
         } catch (final ResourceAccessException resourceAccessException) {
             return new SonarServerStatus(SonarServerStatus.Key.CONNECTION_ERROR, resourceAccessException.getMessage());
         }

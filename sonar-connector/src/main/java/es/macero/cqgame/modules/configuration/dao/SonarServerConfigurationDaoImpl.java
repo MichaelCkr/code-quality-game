@@ -1,17 +1,18 @@
 package es.macero.cqgame.modules.configuration.dao;
 
-import es.macero.cqgame.modules.configuration.domain.SonarServerConfiguration;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Properties;
+import es.macero.cqgame.modules.configuration.domain.SonarServerConfiguration;
 
 @Component
 public class SonarServerConfigurationDaoImpl implements SonarServerConfigurationDao {
