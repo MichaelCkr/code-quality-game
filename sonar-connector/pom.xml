@@ -34,6 +34,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>es.macero.cqgame.app.Application</mainClass>
+				</configuration>
             </plugin>
             <!-- JaCoCo configuration -->
             <plugin>
