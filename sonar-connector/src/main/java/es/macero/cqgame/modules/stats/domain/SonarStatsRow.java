@@ -22,6 +22,7 @@ public final class SonarStatsRow {
 				.withMajor(getMajor() + r2.getMajor())
 				.withMinor(getMinor() + r2.getMinor())
 				.withInfo(getInfo() + r2.getInfo())
+				.withDept(getDept().plus(r2.getDept()))
 				.withBadges(allBadges)
 				.createSonarStatsRow();
 	}

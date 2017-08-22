@@ -2,33 +2,32 @@ package es.macero.cqgame.modules.stats.domain;
 
 import java.time.Duration;
 
+import org.apache.commons.lang3.time.DurationFormatUtils;
+
 public class TechnicalDept {
 
 	private int dept;
-	private long days;
-	private long hours;
-	private long minutes;
 
 	@SuppressWarnings("unused")
 	private TechnicalDept() {
 		// not relevant
 	}
 
-	public TechnicalDept(int dept) {
-		this.dept = dept;
-		Duration duration = Duration.ofMinutes(dept);
-		days = duration.toDays();
-		duration = duration.minusDays(days);
-		hours = duration.toHours();
-		duration = duration.minusHours(hours);
-		minutes = duration.toMinutes();
+	public TechnicalDept(int minutes) {
+		this.dept = minutes;
 	}
 
 	@Override
 	public String toString() {
-		String reslutDays = days != 0 ? days + "d " : "";
-		String resultHours = hours != 0 ? hours + "h " : "";
-		return reslutDays + resultHours + minutes + "m";
+		Duration duration = Duration.ofMinutes(dept);
+		String formatter = "m'm'";
+		if (duration.toHours() > 0) {
+			formatter = "H'h' " + formatter;
+		}
+		if (duration.toDays() > 0) {
+			formatter = "d'd' " + formatter;
+		}
+		return DurationFormatUtils.formatDuration(duration.toMillis(), formatter, false);
 	}
 
 	public TechnicalDept plus(TechnicalDept technicalDept) {
