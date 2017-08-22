@@ -10,4 +10,5 @@
 	<user id="bern" alias="Bernhard" team="Team Grün" />
 	<user id="agohr" alias="Albert" team="Team Blau" />
 	<user id="gehlen" alias="gehlen" team="Team Blau" />
+    <user id="npfeffel" alias="Noah" team="Team Blau" />
 </sonarUserList>
