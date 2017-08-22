@@ -7,14 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -51,9 +47,6 @@ public class SonarIssueAssignerImpl implements SonarIssueAssigner {
 		this.restTemplate = restTemplate;
 	}
 
-	/* (non-Javadoc)
-	 * @see es.macero.cqgame.modules.retriever.service.SonarIssueAssigner#assignIssues(java.lang.String)
-	 */
 	@Override
 	public void assignIssues(String classname) {
 		processSingleClass(classname);
