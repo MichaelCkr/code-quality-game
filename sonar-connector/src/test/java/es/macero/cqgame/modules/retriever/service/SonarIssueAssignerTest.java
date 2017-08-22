@@ -41,6 +41,8 @@ public class SonarIssueAssignerTest {
 		ResponseEntity<Issues> response = new ResponseEntity<>(body, HttpStatus.OK);
 		when(restTemplate.exchange(any(URI.class), eq(HttpMethod.GET), any(HttpEntity.class), eq(Issues.class)))
 				.thenReturn(response);
+		when(restTemplate.exchange(any(URI.class), eq(HttpMethod.POST), any(HttpEntity.class), eq(Issues.class)))
+		.thenReturn(response);
 		SonarIssueAssigner issueAssigner = new SonarIssueAssignerImpl(configurationService, restTemplate);
 		issueAssigner.assignIssues("analyzerFunctionalView-myClass");
 	}
